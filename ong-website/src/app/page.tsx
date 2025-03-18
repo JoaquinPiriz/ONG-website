@@ -42,36 +42,45 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section id="inicio" className="py-16 md:py-24 bg-gradient-to-r from-primary/10 to-primary/5">
-        <div className="container mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Juntos podemos hacer la diferencia</h1>
-            <p className="text-lg text-muted-foreground mb-8">
+      {/* Hero Section with Background Image */}
+      <section id="inicio" className="relative py-24 md:py-32 lg:py-40 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 w-full h-full">
+        <Image
+  src="/images/banner.jpg"
+  alt="Voluntarios trabajando juntos en la construcción de un pozo de agua en una comunidad rural, con hermosa luz dorada filtrándose entre los árboles"
+  fill
+  style={{ objectFit: "cover", objectPosition: "bottom" }}
+  priority
+  className="z-0"
+/>
+
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70 mix-blend-multiply z-1"></div>
+        </div>
+
+        {/* Content */}
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center text-white">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 drop-shadow-md">
+              Juntos podemos hacer la diferencia
+            </h1>
+            <p className="text-lg md:text-xl mb-8 text-white/90 drop-shadow">
               Cada donación tiene un impacto directo en nuestras comunidades. Transparencia total en cómo utilizamos tus
               contribuciones.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" asChild>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-white text-primary hover:bg-white/90" asChild>
                 <Link href="#donar">
                   Donar Ahora
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/20" asChild>
                 <Link href="#proyectos">Conoce Nuestros Proyectos</Link>
               </Button>
             </div>
           </div>
-          <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden">
-  <Image
-    src="/images/hero2.jpg"
-    alt="Voluntarios trabajando en la comunidad"
-    layout="fill"
-    objectFit="contain"
-  />
-</div>
-
         </div>
       </section>
 
