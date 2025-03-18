@@ -27,7 +27,7 @@ export default function DonationForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Haz una donación</CardTitle>
+        <CardTitle id="formulario-donacion">Haz una donación</CardTitle>
         <CardDescription>
           Tu donación ayuda a financiar proyectos que tienen un impacto real en las comunidades.
         </CardDescription>
@@ -115,7 +115,16 @@ export default function DonationForm() {
               </div>
             </div>
 
-            <Button className="w-full">Donar ahora</Button>
+            <Button
+              className="w-full"
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault()
+                alert("¡Gracias por tu donación! En un entorno real, procesaríamos tu pago de forma segura.")
+              }}
+            >
+              Donar ahora
+            </Button>
 
             <p className="text-xs text-muted-foreground text-center mt-4">
               Tu donación es segura y procesada con encriptación. Recibirás un recibo por correo electrónico.
@@ -181,7 +190,16 @@ export default function DonationForm() {
               </div>
             </div>
 
-            <Button className="w-full">Suscribirse mensualmente</Button>
+            <Button
+              className="w-full"
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault()
+                alert("¡Gracias por tu suscripción mensual! En un entorno real, procesaríamos tu pago de forma segura.")
+              }}
+            >
+              Suscribirse mensualmente
+            </Button>
 
             <p className="text-xs text-muted-foreground text-center mt-4">
               Tu donación mensual puede ser cancelada en cualquier momento. Recibirás un recibo por cada pago.
