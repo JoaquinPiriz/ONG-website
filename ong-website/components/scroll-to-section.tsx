@@ -16,28 +16,64 @@ export default function ScrollToSection() {
       if (link && link.hash && link.origin === window.location.origin) {
         e.preventDefault()
 
-        const id = link.hash.substring(1)
+        // Extraer el ID de la sección (antes de cualquier parámetro)
+        const hashParts = link.hash.split("?")
+        const id = hashParts[0].substring(1)
         const element = document.getElementById(id)
 
         if (element) {
           element.scrollIntoView({ behavior: "smooth" })
 
-          // Actualizar la URL sin recargar la página
+          // Actualizar la URL sin recargar la página, manteniendo los parámetros
           window.history.pushState({}, "", link.hash)
+
+          // Si hay un parámetro de proyecto y estamos en la sección de donación
+          if (id === "donar" && hashParts.length > 1) {
+            // Forzar un pequeño retraso para asegurar que el evento se procese correctamente
+            setTimeout(() => {
+              // Disparar un evento personalizado para notificar el cambio de hash
+              window.dispatchEvent(new CustomEvent("hashchange"))
+              window.dispatchEvent(new CustomEvent("customHashChange"))
+
+              // Dar tiempo para que se cargue el formulario
+              setTimeout(() => {
+                const donationForm = document.getElementById("formulario-donacion")
+                if (donationForm) {
+                  donationForm.scrollIntoView({ behavior: "smooth" })
+                }
+              }, 200)
+            }, 100)
+          }
         }
       }
     }
 
     // Verificar si hay un hash en la URL al cargar la página
     if (window.location.hash) {
-      const id = window.location.hash.substring(1)
+      const hashParts = window.location.hash.split("?")
+      const id = hashParts[0].substring(1)
       const element = document.getElementById(id)
 
       if (element) {
         // Esperar un poco para que la página se renderice completamente
         setTimeout(() => {
           element.scrollIntoView({ behavior: "smooth" })
-        }, 100)
+
+          // Si hay un parámetro de proyecto y estamos en la sección de donación
+          if (id === "donar" && hashParts.length > 1) {
+            // Disparar un evento personalizado para notificar el cambio de hash
+            window.dispatchEvent(new CustomEvent("hashchange"))
+            window.dispatchEvent(new CustomEvent("customHashChange"))
+
+            // Dar tiempo para que se cargue el formulario
+            setTimeout(() => {
+              const donationForm = document.getElementById("formulario-donacion")
+              if (donationForm) {
+                donationForm.scrollIntoView({ behavior: "smooth" })
+              }
+            }, 200)
+          }
+        }, 200)
       }
     }
 

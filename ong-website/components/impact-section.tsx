@@ -11,21 +11,21 @@ export default function ImpactSection() {
       role: "Beneficiaria, Proyecto Agua Limpia",
       quote:
         "Gracias a la instalación del nuevo pozo, nuestra comunidad ahora tiene acceso a agua potable por primera vez. Esto ha cambiado nuestras vidas.",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "/images/maria.jpg",
     },
     {
       name: "Juan Pérez",
       role: "Director de Escuela, Proyecto Educación",
       quote:
         "Los nuevos materiales educativos y la renovación de nuestras aulas han mejorado significativamente la calidad de la educación que podemos ofrecer.",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "/images/juan.jpg",
     },
     {
       name: "Ana Martínez",
       role: "Enfermera, Proyecto Salud",
       quote:
         "La clínica móvil nos permite llegar a comunidades remotas que nunca antes habían tenido acceso a atención médica básica.",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: "/images/ana.jpg",
     },
   ]
 
@@ -41,14 +41,19 @@ export default function ImpactSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="overflow-hidden">
+            <Card key={index} className="overflow-hidden hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <Quote className="h-8 w-8 text-primary/40 mb-4" />
                 <p className="mb-6 italic">"{testimonial.quote}"</p>
                 <div className="flex items-center">
-                  <Avatar className="h-10 w-10 mr-4">
+                  <Avatar className="h-16 w-16 mr-4 border-2 border-primary/20">
                     <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                    <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                    <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                      {testimonial.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="font-medium">{testimonial.name}</p>

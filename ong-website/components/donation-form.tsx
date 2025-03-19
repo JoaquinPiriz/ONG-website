@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
@@ -11,17 +10,79 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 
 export default function DonationForm() {
-  const [amount, setAmount] = useState<string>("")
-  const [customAmount, setCustomAmount] = useState<string>("")
+  const [activeTab, setActiveTab] = useState<string>("oneTime")
+  const [oneTimeAmount, setOneTimeAmount] = useState<string>("")
+  const [monthlyAmount, setMonthlyAmount] = useState<string>("")
+  const [oneTimeCustomAmount, setOneTimeCustomAmount] = useState<string>("")
+  const [monthlyCustomAmount, setMonthlyCustomAmount] = useState<string>("")
+  const [oneTimeProject, setOneTimeProject] = useState<string>("any")
+  const [monthlyProject, setMonthlyProject] = useState<string>("any")
+
+  const amount = activeTab === "oneTime" ? oneTimeAmount : monthlyAmount
+  const customAmount = activeTab === "oneTime" ? oneTimeCustomAmount : monthlyCustomAmount
+  const project = activeTab === "oneTime" ? oneTimeProject : monthlyProject
+
+  // Detectar proyecto seleccionado desde la URL
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash
+
+      if (hash.includes("?proyecto=")) {
+        const projectParam = hash.split("?proyecto=")[1]
+
+        if (["water", "education", "health"].includes(projectParam)) {
+          // Actualizar inmediatamente para evitar problemas de timing
+          setOneTimeProject(projectParam)
+          setMonthlyProject(projectParam)
+
+          // Forzar una actualización adicional después de un breve retraso
+          setTimeout(() => {
+            setOneTimeProject(projectParam)
+            setMonthlyProject(projectParam)
+          }, 100)
+        }
+      }
+    }
+
+    // Verificar al cargar el componente
+    handleHashChange()
+
+    // Escuchar cambios en el hash
+    window.addEventListener("hashchange", handleHashChange)
+    window.addEventListener("customHashChange", handleHashChange)
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange)
+      window.removeEventListener("customHashChange", handleHashChange)
+    }
+  }, [])
 
   const handleAmountChange = (value: string) => {
-    setAmount(value)
-    setCustomAmount("")
+    if (activeTab === "oneTime") {
+      setOneTimeAmount(value)
+      setOneTimeCustomAmount("")
+    } else {
+      setMonthlyAmount(value)
+      setMonthlyCustomAmount("")
+    }
   }
 
   const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomAmount(e.target.value)
-    setAmount("custom")
+    if (activeTab === "oneTime") {
+      setOneTimeCustomAmount(e.target.value)
+      setOneTimeAmount("custom")
+    } else {
+      setMonthlyCustomAmount(e.target.value)
+      setMonthlyAmount("custom")
+    }
+  }
+
+  const handleProjectChange = (value: string) => {
+    if (activeTab === "oneTime") {
+      setOneTimeProject(value)
+    } else {
+      setMonthlyProject(value)
+    }
   }
 
   return (
@@ -33,7 +94,7 @@ export default function DonationForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="oneTime" className="w-full">
+        <Tabs defaultValue="oneTime" className="w-full" onValueChange={(value) => setActiveTab(value)}>
           <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="oneTime">Única</TabsTrigger>
             <TabsTrigger value="monthly">Mensual</TabsTrigger>
@@ -42,7 +103,7 @@ export default function DonationForm() {
           <TabsContent value="oneTime" className="space-y-6">
             <div className="space-y-4">
               <Label>Selecciona o ingresa un monto</Label>
-              <RadioGroup value={amount} onValueChange={handleAmountChange} className="grid grid-cols-3 gap-4">
+              <RadioGroup value={oneTimeAmount} onValueChange={handleAmountChange} className="grid grid-cols-3 gap-4">
                 {["10", "25", "50", "100", "250", "custom"].map((value) => (
                   <div key={value} className="flex items-center">
                     <RadioGroupItem value={value} id={`amount-${value}`} className="peer sr-only" />
@@ -56,7 +117,7 @@ export default function DonationForm() {
                 ))}
               </RadioGroup>
 
-              {amount === "custom" && (
+              {oneTimeAmount === "custom" && (
                 <div className="mt-4">
                   <Label htmlFor="custom-amount">Monto personalizado</Label>
                   <div className="relative mt-1">
@@ -66,7 +127,7 @@ export default function DonationForm() {
                       type="number"
                       min="1"
                       placeholder="Ingresa un monto"
-                      value={customAmount}
+                      value={oneTimeCustomAmount}
                       onChange={handleCustomAmountChange}
                       className="pl-8"
                     />
@@ -77,22 +138,30 @@ export default function DonationForm() {
 
             <div className="space-y-4">
               <Label>Selecciona un proyecto (opcional)</Label>
-              <RadioGroup defaultValue="any" className="space-y-2">
+              <RadioGroup value={oneTimeProject} onValueChange={handleProjectChange} className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="any" id="project-any" />
-                  <Label htmlFor="project-any">Donde más se necesite</Label>
+                  <Label htmlFor="project-any" className="cursor-pointer">
+                    Donde más se necesite
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="water" id="project-water" />
-                  <Label htmlFor="project-water">Agua Limpia</Label>
+                  <Label htmlFor="project-water" className="cursor-pointer">
+                    Agua Limpia
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="education" id="project-education" />
-                  <Label htmlFor="project-education">Educación para Todos</Label>
+                  <Label htmlFor="project-education" className="cursor-pointer">
+                    Educación para Todos
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="health" id="project-health" />
-                  <Label htmlFor="project-health">Salud Comunitaria</Label>
+                  <Label htmlFor="project-health" className="cursor-pointer">
+                    Salud Comunitaria
+                  </Label>
                 </div>
               </RadioGroup>
             </div>
@@ -132,10 +201,9 @@ export default function DonationForm() {
           </TabsContent>
 
           <TabsContent value="monthly" className="space-y-6">
-            {/* Similar content as oneTime but with monthly subscription messaging */}
             <div className="space-y-4">
               <Label>Selecciona o ingresa un monto mensual</Label>
-              <RadioGroup defaultValue="25" className="grid grid-cols-3 gap-4">
+              <RadioGroup value={monthlyAmount} onValueChange={handleAmountChange} className="grid grid-cols-3 gap-4">
                 {["10", "25", "50", "100", "250", "custom"].map((value) => (
                   <div key={value} className="flex items-center">
                     <RadioGroupItem value={value} id={`monthly-${value}`} className="peer sr-only" />
@@ -148,26 +216,52 @@ export default function DonationForm() {
                   </div>
                 ))}
               </RadioGroup>
+
+              {monthlyAmount === "custom" && (
+                <div className="mt-4">
+                  <Label htmlFor="monthly-custom-amount">Monto personalizado</Label>
+                  <div className="relative mt-1">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
+                    <Input
+                      id="monthly-custom-amount"
+                      type="number"
+                      min="1"
+                      placeholder="Ingresa un monto"
+                      value={monthlyCustomAmount}
+                      onChange={handleCustomAmountChange}
+                      className="pl-8"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-4">
               <Label>Selecciona un proyecto (opcional)</Label>
-              <RadioGroup defaultValue="any" className="space-y-2">
+              <RadioGroup value={monthlyProject} onValueChange={handleProjectChange} className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="any" id="monthly-project-any" />
-                  <Label htmlFor="monthly-project-any">Donde más se necesite</Label>
+                  <Label htmlFor="monthly-project-any" className="cursor-pointer">
+                    Donde más se necesite
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="water" id="monthly-project-water" />
-                  <Label htmlFor="monthly-project-water">Agua Limpia</Label>
+                  <Label htmlFor="monthly-project-water" className="cursor-pointer">
+                    Agua Limpia
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="education" id="monthly-project-education" />
-                  <Label htmlFor="monthly-project-education">Educación para Todos</Label>
+                  <Label htmlFor="monthly-project-education" className="cursor-pointer">
+                    Educación para Todos
+                  </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="health" id="monthly-project-health" />
-                  <Label htmlFor="monthly-project-health">Salud Comunitaria</Label>
+                  <Label htmlFor="monthly-project-health" className="cursor-pointer">
+                    Salud Comunitaria
+                  </Label>
                 </div>
               </RadioGroup>
             </div>

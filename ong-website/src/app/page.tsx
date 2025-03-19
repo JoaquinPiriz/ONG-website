@@ -7,13 +7,12 @@ import DonationForm from "../../components/donation-form"
 import DonationTracker from "../../components/donation-tracker"
 import ImpactSection from "../../components/impact-section"
 import ScrollToSection from "../../components/scroll-to-section"
-
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToSection />
       {/* Navigation */}
-      <header className="border-b">
+      <header className="border-b bg-background z-10 relative">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Heart className="h-6 w-6 text-primary" />
@@ -46,15 +45,14 @@ export default function Home() {
       <section id="inicio" className="relative py-24 md:py-32 lg:py-40 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 w-full h-full">
-        <Image
-  src="/images/banner.jpg"
-  alt="Voluntarios trabajando juntos en la construcción de un pozo de agua en una comunidad rural, con hermosa luz dorada filtrándose entre los árboles"
-  fill
-  style={{ objectFit: "cover", objectPosition: "bottom" }}
-  priority
-  className="z-0"
-/>
-
+          <Image
+            src="/images/banner.jpg"
+            alt="Voluntarios trabajando juntos en la construcción de un pozo de agua en una comunidad rural, con hermosa luz dorada filtrándose entre los árboles"
+            fill
+            style={{ objectFit: "cover", objectPosition: "bottom" }}
+            priority
+            className="z-0"
+          />
           {/* Overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/70 mix-blend-multiply z-1"></div>
         </div>
@@ -139,15 +137,13 @@ export default function Home() {
             </div>
 
             <div className="relative h-[400px] md:h-[500px] rounded-lg overflow-hidden">
-  <Image
-    src="/images/nosotros-collage.jpg"
-    alt="Collage de proyectos y beneficiarios de ONG Ayuda"
-    fill
-    style={{ objectFit: "contain" }}
-  />
-</div>
-
-
+              <Image
+                src="/images/nosotros-collage.jpg"
+                alt="Collage de proyectos y beneficiarios de ONG Ayuda"
+                fill
+                style={{ objectFit: "contain" }}
+              />
+            </div>
           </div>
 
           <div className="mt-16">
@@ -197,6 +193,7 @@ export default function Home() {
                 goal: "$15,000",
                 raised: "$11,250",
                 image: "/images/proyecto_agua.jpg",
+                projectId: "water",
               },
               {
                 title: "Educación para Todos",
@@ -205,6 +202,7 @@ export default function Home() {
                 goal: "$25,000",
                 raised: "$11,250",
                 image: "/images/proyecto_educacion.jpg",
+                projectId: "education",
               },
               {
                 title: "Salud Comunitaria",
@@ -213,9 +211,10 @@ export default function Home() {
                 goal: "$20,000",
                 raised: "$12,000",
                 image: "/images/proyecto_salud.jpg",
+                projectId: "health",
               },
             ].map((project, index) => (
-              <Card key={index}>
+              <Card key={index} className="flex flex-col">
                 <CardHeader>
                   <div className="h-48 mb-4 rounded-md overflow-hidden relative">
                     <Image
@@ -228,7 +227,7 @@ export default function Home() {
                   <CardTitle>{project.title}</CardTitle>
                   <CardDescription>{project.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-grow">
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Recaudado: {project.raised}</span>
@@ -240,9 +239,9 @@ export default function Home() {
                     <p className="text-sm text-muted-foreground text-right">{project.progress}% completado</p>
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="mt-auto">
                   <Button className="w-full" asChild>
-                    <Link href="#donar">Apoyar este proyecto</Link>
+                    <Link href={`#donar?proyecto=${project.projectId}`}>Apoyar este proyecto</Link>
                   </Button>
                 </CardFooter>
               </Card>
@@ -284,33 +283,239 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                title: "Informes Financieros",
-                description: "Accede a nuestros informes financieros detallados y auditados.",
-              },
-              {
-                title: "Seguimiento de Proyectos",
-                description: "Monitorea el progreso de cada proyecto en tiempo real.",
-              },
-              {
-                title: "Impacto Directo",
-                description: "Conoce a las personas beneficiadas por tu donación.",
-              },
-            ].map((item, index) => (
-              <Card key={index}>
-                <CardHeader>
-                  <CardTitle>{item.title}</CardTitle>
-                  <CardDescription>{item.description}</CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link href="#transparencia">Saber más</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="overflow-hidden border-t-4 border-t-blue-500 hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-blue-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <CardTitle>Informes Financieros</CardTitle>
+                <CardDescription>Accede a nuestros informes financieros detallados y auditados.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Informes trimestrales
+                  </li>
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Auditorías externas anuales
+                  </li>
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Desglose detallado de gastos
+                  </li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="#transparencia">Ver informes</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card className="overflow-hidden border-t-4 border-t-green-500 hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-green-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                    />
+                  </svg>
+                </div>
+                <CardTitle>Seguimiento de Proyectos</CardTitle>
+                <CardDescription>Monitorea el progreso de cada proyecto en tiempo real.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Actualizaciones semanales
+                  </li>
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Fotos y videos del progreso
+                  </li>
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Métricas de impacto verificables
+                  </li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="#transparencia">Ver proyectos</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card className="overflow-hidden border-t-4 border-t-purple-500 hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-2">
+                <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 text-purple-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
+                  </svg>
+                </div>
+                <CardTitle>Impacto Directo</CardTitle>
+                <CardDescription>Conoce a las personas beneficiadas por tu donación.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Testimonios de beneficiarios
+                  </li>
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Historias de transformación
+                  </li>
+                  <li className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4 mr-2 text-green-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    Estadísticas de mejora de vida
+                  </li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="#transparencia">Conocer historias</Link>
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+
+          <div className="mt-16 bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="p-6 md:p-8">
+              <h3 className="text-xl font-bold mb-4 text-center">Nuestro Compromiso con la Transparencia</h3>
+              <div className="grid md:grid-cols-4 gap-6 text-center">
+                <div>
+                  <div className="text-3xl font-bold text-primary mb-2">92%</div>
+                  <p className="text-sm text-muted-foreground">De cada donación va directamente a los proyectos</p>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-primary mb-2">100%</div>
+                  <p className="text-sm text-muted-foreground">De transparencia en el uso de fondos</p>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-primary mb-2">4.9/5</div>
+                  <p className="text-sm text-muted-foreground">Calificación de transparencia por Charity Navigator</p>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-primary mb-2">24/7</div>
+                  <p className="text-sm text-muted-foreground">Acceso a información actualizada de proyectos</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-muted p-4 text-center">
+              <p className="text-sm">
+                <strong>Nuestra promesa:</strong> Cada peso donado es rastreado y reportado con total transparencia.
+              </p>
+            </div>
           </div>
         </div>
       </section>
